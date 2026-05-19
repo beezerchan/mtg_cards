@@ -25,7 +25,8 @@ export class CardBrowserComponent implements OnInit {
   }
 
   ngOnInit(){
-    this._card_service.fetch_cards()
+    // this.current_card =
+     this._card_service.get_card()
   }
 
 }
