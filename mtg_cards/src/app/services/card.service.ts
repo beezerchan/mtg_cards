@@ -8,6 +8,13 @@ import { Card } from '../models/card_dtos';
 export class CardService implements OnInit {
   constructor(http: HttpClient) {
     this._http = http;
+
+    console.log('card service constructor')
+    this.headers.append('Content-Type', 'application/json')
+    this.headers.append('Access-Control-Allow-Origin', '*')
+  
+    this.fetch_cards()
+
   }
   private _http: HttpClient;
   private card_signal = signal<Card|undefined>(undefined);
@@ -18,11 +25,12 @@ export class CardService implements OnInit {
 
 
   fetch_cards(): void {
+    console.log('fetching cards')
     this.loading_signal.set(true);
-    this._http
+      this._http
       .get<any>('/api/cards', {headers: this.headers})
       .subscribe((c) => {
-        console.log(c.cards)
+        console.log('cards result', c)
         this.cards = c.cards;
         this.loading_signal.set(false);
         this.card_signal.set(this.cards[0])
@@ -30,9 +38,9 @@ export class CardService implements OnInit {
       });
   }
 
-  get_card = (): void => {
+  get_card = (): Card|undefined => {
     console.log('getting cards')
-   // return this.card_signal;
+    return this.card_signal();
   };
 
   get_is_loading(): Signal<boolean> {
@@ -40,8 +48,6 @@ export class CardService implements OnInit {
   }
 
   ngOnInit(): void {
-    this.headers.append('Content-Type', 'application/json')
-    this.headers.append('Access-Control-Allow-Origin', '*')
-    this.fetch_cards()
+    
   }
 }
